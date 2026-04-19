@@ -1,0 +1,11 @@
+C:\Windows\SportsForge\backend\khoiIntegration\bin\Debug\net10.0\khoiIntegration.deps.json
+C:\Windows\SportsForge\backend\khoiIntegration\bin\Debug\net10.0\khoiIntegration.dll
+C:\Windows\SportsForge\backend\khoiIntegration\bin\Debug\net10.0\khoiIntegration.pdb
+C:\Windows\SportsForge\backend\khoiIntegration\obj\Debug\net10.0\khoiIntegration.GeneratedMSBuildEditorConfig.editorconfig
+C:\Windows\SportsForge\backend\khoiIntegration\obj\Debug\net10.0\khoiIntegration.AssemblyInfoInputs.cache
+C:\Windows\SportsForge\backend\khoiIntegration\obj\Debug\net10.0\khoiIntegration.AssemblyInfo.cs
+C:\Windows\SportsForge\backend\khoiIntegration\obj\Debug\net10.0\khoiIntegration.csproj.CoreCompileInputs.cache
+C:\Windows\SportsForge\backend\khoiIntegration\obj\Debug\net10.0\khoiIntegration.dll
+C:\Windows\SportsForge\backend\khoiIntegration\obj\Debug\net10.0\refint\khoiIntegration.dll
+C:\Windows\SportsForge\backend\khoiIntegration\obj\Debug\net10.0\khoiIntegration.pdb
+C:\Windows\SportsForge\backend\khoiIntegration\obj\Debug\net10.0\ref\khoiIntegration.dll
