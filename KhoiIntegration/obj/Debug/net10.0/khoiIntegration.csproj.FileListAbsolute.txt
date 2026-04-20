@@ -9,3 +9,15 @@ C:\Windows\SportsForge\backend\khoiIntegration\obj\Debug\net10.0\khoiIntegration
 C:\Windows\SportsForge\backend\khoiIntegration\obj\Debug\net10.0\refint\khoiIntegration.dll
 C:\Windows\SportsForge\backend\khoiIntegration\obj\Debug\net10.0\khoiIntegration.pdb
 C:\Windows\SportsForge\backend\khoiIntegration\obj\Debug\net10.0\ref\khoiIntegration.dll
+C:\Projects\SportsForge2026\SportsForge\backend\khoiIntegration\bin\Debug\net10.0\khoiIntegration.deps.json
+C:\Projects\SportsForge2026\SportsForge\backend\khoiIntegration\bin\Debug\net10.0\khoiIntegration.dll
+C:\Projects\SportsForge2026\SportsForge\backend\khoiIntegration\bin\Debug\net10.0\khoiIntegration.pdb
+C:\Projects\SportsForge2026\SportsForge\backend\khoiIntegration\obj\Debug\net10.0\khoiIntegration.GeneratedMSBuildEditorConfig.editorconfig
+C:\Projects\SportsForge2026\SportsForge\backend\khoiIntegration\obj\Debug\net10.0\khoiIntegration.AssemblyInfoInputs.cache
+C:\Projects\SportsForge2026\SportsForge\backend\khoiIntegration\obj\Debug\net10.0\khoiIntegration.AssemblyInfo.cs
+C:\Projects\SportsForge2026\SportsForge\backend\khoiIntegration\obj\Debug\net10.0\khoiIntegration.csproj.CoreCompileInputs.cache
+C:\Projects\SportsForge2026\SportsForge\backend\khoiIntegration\obj\Debug\net10.0\khoiIntegration.sourcelink.json
+C:\Projects\SportsForge2026\SportsForge\backend\khoiIntegration\obj\Debug\net10.0\khoiIntegration.dll
+C:\Projects\SportsForge2026\SportsForge\backend\khoiIntegration\obj\Debug\net10.0\refint\khoiIntegration.dll
+C:\Projects\SportsForge2026\SportsForge\backend\khoiIntegration\obj\Debug\net10.0\khoiIntegration.pdb
+C:\Projects\SportsForge2026\SportsForge\backend\khoiIntegration\obj\Debug\net10.0\ref\khoiIntegration.dll

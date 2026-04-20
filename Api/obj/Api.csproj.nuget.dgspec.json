@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Windows\\SportsForge\\backend\\Api\\Api.csproj": {}
+    "C:\\Projects\\SportsForge2026\\SportsForge\\backend\\Api\\Api.csproj": {}
   },
   "projects": {
-    "C:\\Windows\\SportsForge\\backend\\Api\\Api.csproj": {
+    "C:\\Projects\\SportsForge2026\\SportsForge\\backend\\Api\\Api.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Windows\\SportsForge\\backend\\Api\\Api.csproj",
+        "projectUniqueName": "C:\\Projects\\SportsForge2026\\SportsForge\\backend\\Api\\Api.csproj",
         "projectName": "Api",
-        "projectPath": "C:\\Windows\\SportsForge\\backend\\Api\\Api.csproj",
-        "packagesPath": "C:\\Users\\USER\\.nuget\\packages\\",
-        "outputPath": "C:\\Windows\\SportsForge\\backend\\Api\\obj\\",
+        "projectPath": "C:\\Projects\\SportsForge2026\\SportsForge\\backend\\Api\\Api.csproj",
+        "packagesPath": "C:\\Users\\Brian\\.nuget\\packages\\",
+        "outputPath": "C:\\Projects\\SportsForge2026\\SportsForge\\backend\\Api\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\USER\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Brian\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -32,8 +32,8 @@
           "net10.0": {
             "targetAlias": "net10.0",
             "projectReferences": {
-              "C:\\Windows\\SportsForge\\backend\\khoiIntegration\\khoiIntegration.csproj": {
-                "projectPath": "C:\\Windows\\SportsForge\\backend\\khoiIntegration\\khoiIntegration.csproj"
+              "C:\\Projects\\SportsForge2026\\SportsForge\\backend\\khoiIntegration\\khoiIntegration.csproj": {
+                "projectPath": "C:\\Projects\\SportsForge2026\\SportsForge\\backend\\khoiIntegration\\khoiIntegration.csproj"
               }
             }
           }
@@ -48,12 +48,32 @@
           "auditLevel": "low",
           "auditMode": "all"
         },
-        "SdkAnalysisLevel": "10.0.200"
+        "SdkAnalysisLevel": "10.0.100"
       },
       "frameworks": {
         "net10.0": {
           "targetAlias": "net10.0",
           "dependencies": {
+            "AutoMapper.Extensions.Microsoft.DependencyInjection": {
+              "target": "Package",
+              "version": "[12.0.1, )"
+            },
+            "FluentValidation.AspNetCore": {
+              "target": "Package",
+              "version": "[11.3.1, )"
+            },
+            "MediatR": {
+              "target": "Package",
+              "version": "[14.1.0, )"
+            },
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[10.0.6, )"
+            },
+            "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[10.0.6, )"
+            },
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
               "version": "[10.0.3, )"
@@ -67,6 +87,20 @@
             "Microsoft.EntityFrameworkCore.SqlServer": {
               "target": "Package",
               "version": "[10.0.6, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[10.0.6, )"
+            },
+            "Serilog.AspNetCore": {
+              "target": "Package",
+              "version": "[10.0.0, )"
+            },
+            "Serilog.Sinks.Console": {
+              "target": "Package",
+              "version": "[6.1.1, )"
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
@@ -92,7 +126,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.202/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.103/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.AspNetCore": "(,10.0.32767]",
             "Microsoft.AspNetCore.Antiforgery": "(,10.0.32767]",
@@ -510,20 +544,20 @@
         }
       }
     },
-    "C:\\Windows\\SportsForge\\backend\\khoiIntegration\\khoiIntegration.csproj": {
+    "C:\\Projects\\SportsForge2026\\SportsForge\\backend\\khoiIntegration\\khoiIntegration.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Windows\\SportsForge\\backend\\khoiIntegration\\khoiIntegration.csproj",
+        "projectUniqueName": "C:\\Projects\\SportsForge2026\\SportsForge\\backend\\khoiIntegration\\khoiIntegration.csproj",
         "projectName": "khoiIntegration",
-        "projectPath": "C:\\Windows\\SportsForge\\backend\\khoiIntegration\\khoiIntegration.csproj",
-        "packagesPath": "C:\\Users\\USER\\.nuget\\packages\\",
-        "outputPath": "C:\\Windows\\SportsForge\\backend\\khoiIntegration\\obj\\",
+        "projectPath": "C:\\Projects\\SportsForge2026\\SportsForge\\backend\\khoiIntegration\\khoiIntegration.csproj",
+        "packagesPath": "C:\\Users\\Brian\\.nuget\\packages\\",
+        "outputPath": "C:\\Projects\\SportsForge2026\\SportsForge\\backend\\khoiIntegration\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\USER\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Brian\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -550,7 +584,7 @@
           "auditLevel": "low",
           "auditMode": "all"
         },
-        "SdkAnalysisLevel": "10.0.200"
+        "SdkAnalysisLevel": "10.0.100"
       },
       "frameworks": {
         "net10.0": {
@@ -571,7 +605,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.202/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.103/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
