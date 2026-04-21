@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("khoiIntegration")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3907c352cfd4871103f77280109ffbf95d8566c3")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+80e4437e4847f244e0d635890c83b86bd73af16e")]
 [assembly: System.Reflection.AssemblyProductAttribute("khoiIntegration")]
 [assembly: System.Reflection.AssemblyTitleAttribute("khoiIntegration")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
