@@ -1,24 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Projects\\SportsForge2026\\SportsForge\\backend\\Api\\Api.csproj": {}
+    "C:\\Users\\ndali\\Desktop\\New folder\\SportsForge\\backend\\Api\\Api.csproj": {}
   },
   "projects": {
-    "C:\\Projects\\SportsForge2026\\SportsForge\\backend\\Api\\Api.csproj": {
+    "C:\\Users\\ndali\\Desktop\\New folder\\SportsForge\\backend\\Api\\Api.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Projects\\SportsForge2026\\SportsForge\\backend\\Api\\Api.csproj",
+        "projectUniqueName": "C:\\Users\\ndali\\Desktop\\New folder\\SportsForge\\backend\\Api\\Api.csproj",
         "projectName": "Api",
-        "projectPath": "C:\\Projects\\SportsForge2026\\SportsForge\\backend\\Api\\Api.csproj",
-        "packagesPath": "C:\\Users\\Brian\\.nuget\\packages\\",
-        "outputPath": "C:\\Projects\\SportsForge2026\\SportsForge\\backend\\Api\\obj\\",
+        "projectPath": "C:\\Users\\ndali\\Desktop\\New folder\\SportsForge\\backend\\Api\\Api.csproj",
+        "packagesPath": "C:\\Users\\ndali\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\ndali\\Desktop\\New folder\\SportsForge\\backend\\Api\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\Brian\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\ndali\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -26,14 +22,15 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net10.0": {
             "targetAlias": "net10.0",
             "projectReferences": {
-              "C:\\Projects\\SportsForge2026\\SportsForge\\backend\\khoiIntegration\\khoiIntegration.csproj": {
-                "projectPath": "C:\\Projects\\SportsForge2026\\SportsForge\\backend\\khoiIntegration\\khoiIntegration.csproj"
+              "C:\\Users\\ndali\\Desktop\\New folder\\SportsForge\\backend\\khoiIntegration\\khoiIntegration.csproj": {
+                "projectPath": "C:\\Users\\ndali\\Desktop\\New folder\\SportsForge\\backend\\khoiIntegration\\khoiIntegration.csproj"
               }
             }
           }
@@ -48,7 +45,7 @@
           "auditLevel": "low",
           "auditMode": "all"
         },
-        "SdkAnalysisLevel": "10.0.100"
+        "SdkAnalysisLevel": "10.0.200"
       },
       "frameworks": {
         "net10.0": {
@@ -126,7 +123,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.103/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.203/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.AspNetCore": "(,10.0.32767]",
             "Microsoft.AspNetCore.Antiforgery": "(,10.0.32767]",
@@ -544,21 +541,17 @@
         }
       }
     },
-    "C:\\Projects\\SportsForge2026\\SportsForge\\backend\\khoiIntegration\\khoiIntegration.csproj": {
+    "C:\\Users\\ndali\\Desktop\\New folder\\SportsForge\\backend\\khoiIntegration\\khoiIntegration.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Projects\\SportsForge2026\\SportsForge\\backend\\khoiIntegration\\khoiIntegration.csproj",
+        "projectUniqueName": "C:\\Users\\ndali\\Desktop\\New folder\\SportsForge\\backend\\khoiIntegration\\khoiIntegration.csproj",
         "projectName": "khoiIntegration",
-        "projectPath": "C:\\Projects\\SportsForge2026\\SportsForge\\backend\\khoiIntegration\\khoiIntegration.csproj",
-        "packagesPath": "C:\\Users\\Brian\\.nuget\\packages\\",
-        "outputPath": "C:\\Projects\\SportsForge2026\\SportsForge\\backend\\khoiIntegration\\obj\\",
+        "projectPath": "C:\\Users\\ndali\\Desktop\\New folder\\SportsForge\\backend\\khoiIntegration\\khoiIntegration.csproj",
+        "packagesPath": "C:\\Users\\ndali\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\ndali\\Desktop\\New folder\\SportsForge\\backend\\khoiIntegration\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\Brian\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\ndali\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -566,6 +559,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -584,7 +578,7 @@
           "auditLevel": "low",
           "auditMode": "all"
         },
-        "SdkAnalysisLevel": "10.0.100"
+        "SdkAnalysisLevel": "10.0.200"
       },
       "frameworks": {
         "net10.0": {
@@ -605,7 +599,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.103/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.203/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
