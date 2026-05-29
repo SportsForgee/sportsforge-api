@@ -21,3 +21,15 @@ C:\Projects\SportsForge2026\SportsForge\backend\khoiIntegration\obj\Debug\net10.
 C:\Projects\SportsForge2026\SportsForge\backend\khoiIntegration\obj\Debug\net10.0\refint\khoiIntegration.dll
 C:\Projects\SportsForge2026\SportsForge\backend\khoiIntegration\obj\Debug\net10.0\khoiIntegration.pdb
 C:\Projects\SportsForge2026\SportsForge\backend\khoiIntegration\obj\Debug\net10.0\ref\khoiIntegration.dll
+C:\Users\Thato Bulane\OneDrive\SportsForge\backend\khoiIntegration\bin\Debug\net10.0\khoiIntegration.deps.json
+C:\Users\Thato Bulane\OneDrive\SportsForge\backend\khoiIntegration\bin\Debug\net10.0\khoiIntegration.dll
+C:\Users\Thato Bulane\OneDrive\SportsForge\backend\khoiIntegration\bin\Debug\net10.0\khoiIntegration.pdb
+C:\Users\Thato Bulane\OneDrive\SportsForge\backend\khoiIntegration\obj\Debug\net10.0\khoiIntegration.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Thato Bulane\OneDrive\SportsForge\backend\khoiIntegration\obj\Debug\net10.0\khoiIntegration.AssemblyInfoInputs.cache
+C:\Users\Thato Bulane\OneDrive\SportsForge\backend\khoiIntegration\obj\Debug\net10.0\khoiIntegration.AssemblyInfo.cs
+C:\Users\Thato Bulane\OneDrive\SportsForge\backend\khoiIntegration\obj\Debug\net10.0\khoiIntegration.csproj.CoreCompileInputs.cache
+C:\Users\Thato Bulane\OneDrive\SportsForge\backend\khoiIntegration\obj\Debug\net10.0\khoiIntegration.sourcelink.json
+C:\Users\Thato Bulane\OneDrive\SportsForge\backend\khoiIntegration\obj\Debug\net10.0\khoiIntegration.dll
+C:\Users\Thato Bulane\OneDrive\SportsForge\backend\khoiIntegration\obj\Debug\net10.0\refint\khoiIntegration.dll
+C:\Users\Thato Bulane\OneDrive\SportsForge\backend\khoiIntegration\obj\Debug\net10.0\khoiIntegration.pdb
+C:\Users\Thato Bulane\OneDrive\SportsForge\backend\khoiIntegration\obj\Debug\net10.0\ref\khoiIntegration.dll
