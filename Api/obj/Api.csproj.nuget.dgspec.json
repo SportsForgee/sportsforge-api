@@ -32,8 +32,8 @@
           "net10.0": {
             "targetAlias": "net10.0",
             "projectReferences": {
-              "C:\\Projects\\SportsForge2026\\SportsForge\\backend\\khoiIntegration\\khoiIntegration.csproj": {
-                "projectPath": "C:\\Projects\\SportsForge2026\\SportsForge\\backend\\khoiIntegration\\khoiIntegration.csproj"
+              "C:\\Projects\\SportsForge2026\\SportsForge\\backend\\KhoiIntegration\\khoiIntegration.csproj": {
+                "projectPath": "C:\\Projects\\SportsForge2026\\SportsForge\\backend\\KhoiIntegration\\khoiIntegration.csproj"
               }
             }
           }
@@ -544,14 +544,14 @@
         }
       }
     },
-    "C:\\Projects\\SportsForge2026\\SportsForge\\backend\\khoiIntegration\\khoiIntegration.csproj": {
+    "C:\\Projects\\SportsForge2026\\SportsForge\\backend\\KhoiIntegration\\khoiIntegration.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Projects\\SportsForge2026\\SportsForge\\backend\\khoiIntegration\\khoiIntegration.csproj",
+        "projectUniqueName": "C:\\Projects\\SportsForge2026\\SportsForge\\backend\\KhoiIntegration\\khoiIntegration.csproj",
         "projectName": "khoiIntegration",
-        "projectPath": "C:\\Projects\\SportsForge2026\\SportsForge\\backend\\khoiIntegration\\khoiIntegration.csproj",
+        "projectPath": "C:\\Projects\\SportsForge2026\\SportsForge\\backend\\KhoiIntegration\\khoiIntegration.csproj",
         "packagesPath": "C:\\Users\\Brian\\.nuget\\packages\\",
-        "outputPath": "C:\\Projects\\SportsForge2026\\SportsForge\\backend\\khoiIntegration\\obj\\",
+        "outputPath": "C:\\Projects\\SportsForge2026\\SportsForge\\backend\\KhoiIntegration\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
