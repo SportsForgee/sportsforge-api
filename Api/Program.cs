@@ -1,5 +1,6 @@
 using System.Text;
 using Api.Data;
+using Api.Hubs;
 using Api.Models;
 using Api.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -21,7 +22,8 @@ builder.Services.AddCors(options =>
                 return uri.Host is "localhost" or "127.0.0.1";
             })
             .AllowAnyHeader()
-            .AllowAnyMethod();
+            .AllowAnyMethod()
+            .AllowCredentials(); // required for SignalR WebSocket handshake
     });
 });
 
@@ -59,9 +61,25 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateLifetime         = true,
             ClockSkew                = TimeSpan.Zero,
         };
+
+        // SignalR passes the JWT via query string for WebSocket connections
+        options.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = context =>
+            {
+                var accessToken = context.Request.Query["access_token"];
+                var path        = context.HttpContext.Request.Path;
+                if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/hubs"))
+                    context.Token = accessToken;
+                return Task.CompletedTask;
+            }
+        };
     });
 
 builder.Services.AddAuthorization();
+
+// ── SIGNALR ───────────────────────────────────────────────────────────────────
+builder.Services.AddSignalR();
 
 // ── SERVICES ──────────────────────────────────────────────────────────────────
 builder.Services.AddSingleton<IClubDataService, InMemoryClubDataService>();
@@ -85,4 +103,5 @@ app.UseCors("Frontend");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+app.MapHub<MessageHub>("/hubs/messages");
 app.Run();
