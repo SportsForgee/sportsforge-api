@@ -88,6 +88,10 @@ namespace Api.Controllers
         public async Task<IActionResult> Create([FromBody] CreateSessionRequest req)
         {
             var coachId = GetUserId();
+            
+            // Get coach's organization
+            var coach = await _users.FindByIdAsync(coachId);
+            if (coach == null) return Unauthorized();
 
             var session = new TrainingSession
             {
@@ -111,8 +115,21 @@ namespace Api.Controllers
                 });
             }
 
-            // Attach participants
+            // Filter participants to only include athletes from the same organization
+            var validAthleteIds = new List<string>();
             foreach (var athleteId in req.AthleteIds.Distinct())
+            {
+                var athlete = await _users.FindByIdAsync(athleteId);
+                if (athlete != null && 
+                    athlete.SfRole == "athlete" && 
+                    athlete.Organisation == coach.Organisation)
+                {
+                    validAthleteIds.Add(athleteId);
+                }
+            }
+
+            // Attach only valid participants
+            foreach (var athleteId in validAthleteIds)
                 _db.SessionParticipants.Add(new SessionParticipant
                 {
                     SessionId = session.Id,

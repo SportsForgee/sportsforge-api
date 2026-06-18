@@ -16,14 +16,9 @@ builder.Services.AddCors(options =>
     options.AddPolicy("Frontend", policy =>
     {
         policy
-            .SetIsOriginAllowed(origin =>
-            {
-                if (!Uri.TryCreate(origin, UriKind.Absolute, out var uri)) return false;
-                return uri.Host is "localhost" or "127.0.0.1";
-            })
+            .AllowAnyOrigin()
             .AllowAnyHeader()
-            .AllowAnyMethod()
-            .AllowCredentials(); // required for SignalR WebSocket handshake
+            .AllowAnyMethod(); // required for SignalR WebSocket handshake
     });
 });
 
@@ -84,6 +79,7 @@ builder.Services.AddSignalR();
 // ── SERVICES ──────────────────────────────────────────────────────────────────
 builder.Services.AddSingleton<IClubDataService, InMemoryClubDataService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
+builder.Services.AddScoped<ICoachDashboardService, CoachDashboardService>();
 
 // ── CONTROLLERS + SWAGGER ─────────────────────────────────────────────────────
 builder.Services.AddControllers();
@@ -91,6 +87,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // ── BUILD ─────────────────────────────────────────────────────────────────────
+builder.WebHost.UseUrls("http://0.0.0.0:5186");
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())

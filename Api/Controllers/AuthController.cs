@@ -34,6 +34,12 @@ namespace Api.Controllers
                 SfRole       = req.Role.ToLowerInvariant(),
                 Organisation = req.Organisation,
                 EmailConfirmed = true,
+                Position     = req.Position,
+                Height       = req.Height,
+                Weight       = req.Weight,
+                Nationality  = req.Nationality,
+                JerseyNumber = req.JerseyNumber,
+                Team         = req.Team,
             };
 
             var result = await _users.CreateAsync(user, req.Password);
