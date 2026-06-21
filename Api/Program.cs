@@ -80,6 +80,10 @@ builder.Services.AddSignalR();
 builder.Services.AddSingleton<IClubDataService, InMemoryClubDataService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<ICoachDashboardService, CoachDashboardService>();
+// Background cleanup for uploaded media
+builder.Services.AddHostedService<Api.Services.UploadCleanupService>();
+// Bind upload options from configuration
+builder.Services.Configure<Api.Models.UploadOptions>(builder.Configuration.GetSection("Uploads"));
 
 // ── CONTROLLERS + SWAGGER ─────────────────────────────────────────────────────
 builder.Services.AddControllers();
@@ -92,8 +96,19 @@ var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
+    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    db.Database.Migrate();
+
+    try
+    {
+        // SQL Server can take a while to grant EF migration lock on first startup.
+        db.Database.SetCommandTimeout(TimeSpan.FromMinutes(3));
+        db.Database.Migrate();
+    }
+    catch (Exception ex)
+    {
+        logger.LogWarning(ex, "Database migration did not complete during startup. API will continue running.");
+    }
 }
 
 if (app.Environment.IsDevelopment())
@@ -105,6 +120,7 @@ if (app.Environment.IsDevelopment())
 app.UseCors("Frontend");
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseStaticFiles();
 app.MapControllers();
 app.MapHub<MessageHub>("/hubs/messages");
 app.Run();
