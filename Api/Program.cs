@@ -3,6 +3,7 @@ using Api.Data;
 using Api.Hubs;
 using Api.Models;
 using Api.Services;
+using KhoiIntegration;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -81,6 +82,19 @@ builder.Services.AddSingleton<IClubDataService, InMemoryClubDataService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<ICoachDashboardService, CoachDashboardService>();
 
+// ── HARDWARE TELEMETRY (Forge Insole + Khoi wearable) ────────────────────────
+builder.Services.AddScoped<IHardwareTelemetryService, HardwareTelemetryService>();
+builder.Services.AddHostedService<KhoiSyncService>();
+builder.Services.AddHttpClient<IKhoiClient, KhoiClient>(client =>
+{
+    var baseUrl = builder.Configuration["Khoi:BaseUrl"];
+    if (!string.IsNullOrWhiteSpace(baseUrl)) client.BaseAddress = new Uri(baseUrl);
+
+    var apiKey = builder.Configuration["Khoi:ApiKey"];
+    if (!string.IsNullOrWhiteSpace(apiKey))
+        client.DefaultRequestHeaders.Authorization = new("Bearer", apiKey);
+});
+
 // ── CONTROLLERS + SWAGGER ─────────────────────────────────────────────────────
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -107,4 +121,5 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 app.MapHub<MessageHub>("/hubs/messages");
+app.MapHub<VitalsHub>("/hubs/vitals");
 app.Run();

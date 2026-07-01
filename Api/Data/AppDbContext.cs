@@ -20,6 +20,12 @@ namespace Api.Data
         public DbSet<SessionParticipant>  SessionParticipants  { get; set; }
         public DbSet<DrillCompletion>     DrillCompletions     { get; set; }
 
+        // Hardware telemetry (Forge Insole + Khoi wearable)
+        public DbSet<Device>          Devices          { get; set; }
+        public DbSet<InsoleReading>   InsoleReadings   { get; set; }
+        public DbSet<WearableReading> WearableReadings { get; set; }
+        public DbSet<SyncSession>     SyncSessions     { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -109,6 +115,52 @@ namespace Api.Data
                  .HasForeignKey(dc => dc.AthleteId)
                  .OnDelete(DeleteBehavior.Restrict);
                 e.HasIndex(dc => new { dc.SessionDrillId, dc.AthleteId }).IsUnique();
+            });
+
+            // Hardware telemetry
+            builder.Entity<Device>(e =>
+            {
+                e.HasOne(d => d.Athlete)
+                 .WithMany()
+                 .HasForeignKey(d => d.AthleteId)
+                 .OnDelete(DeleteBehavior.Restrict);
+                e.HasIndex(d => d.AthleteId);
+                e.HasIndex(d => d.SerialNumber).IsUnique();
+            });
+
+            builder.Entity<InsoleReading>(e =>
+            {
+                e.HasOne(r => r.Device)
+                 .WithMany()
+                 .HasForeignKey(r => r.DeviceId)
+                 .OnDelete(DeleteBehavior.Cascade);
+                e.HasOne(r => r.Athlete)
+                 .WithMany()
+                 .HasForeignKey(r => r.AthleteId)
+                 .OnDelete(DeleteBehavior.Restrict);
+                e.HasIndex(r => new { r.AthleteId, r.Timestamp });
+            });
+
+            builder.Entity<WearableReading>(e =>
+            {
+                e.HasOne(r => r.Device)
+                 .WithMany()
+                 .HasForeignKey(r => r.DeviceId)
+                 .OnDelete(DeleteBehavior.Cascade);
+                e.HasOne(r => r.Athlete)
+                 .WithMany()
+                 .HasForeignKey(r => r.AthleteId)
+                 .OnDelete(DeleteBehavior.Restrict);
+                e.HasIndex(r => new { r.AthleteId, r.Timestamp });
+            });
+
+            builder.Entity<SyncSession>(e =>
+            {
+                e.HasOne(s => s.Device)
+                 .WithMany()
+                 .HasForeignKey(s => s.DeviceId)
+                 .OnDelete(DeleteBehavior.Cascade);
+                e.HasIndex(s => s.DeviceId);
             });
         }
     }
