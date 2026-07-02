@@ -26,6 +26,9 @@ namespace Api.Data
         public DbSet<WearableReading> WearableReadings { get; set; }
         public DbSet<SyncSession>     SyncSessions     { get; set; }
 
+        // Doctor-managed athlete medical records
+        public DbSet<AthleteMedicalRecord> AthleteMedicalRecords { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -161,6 +164,15 @@ namespace Api.Data
                  .HasForeignKey(s => s.DeviceId)
                  .OnDelete(DeleteBehavior.Cascade);
                 e.HasIndex(s => s.DeviceId);
+            });
+
+            builder.Entity<AthleteMedicalRecord>(e =>
+            {
+                e.HasOne(r => r.Athlete)
+                 .WithMany()
+                 .HasForeignKey(r => r.AthleteId)
+                 .OnDelete(DeleteBehavior.Cascade);
+                e.HasIndex(r => r.AthleteId).IsUnique();
             });
         }
     }
