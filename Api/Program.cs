@@ -96,10 +96,27 @@ builder.Services.AddHttpClient<IKhoiClient, KhoiClient>(client =>
         client.DefaultRequestHeaders.Authorization = new("Bearer", apiKey);
 });
 
+// ── VIDEO ANALYSIS (OpenCV + MediaPipe via ai-service) ───────────────────────
+builder.Services.AddSingleton<IVideoStorageService, LocalVideoStorageService>();
+builder.Services.AddScoped<IVideoAnalysisService, VideoAnalysisService>();
+builder.Services.AddHttpClient<IVideoAnalysisAiClient, VideoAnalysisAiClient>(client =>
+{
+    var baseUrl = builder.Configuration["AiService:BaseUrl"] ?? "http://localhost:8001";
+    client.BaseAddress = new Uri(baseUrl);
+    client.Timeout = TimeSpan.FromSeconds(10); // analysis itself runs async server-side; this just needs to accept the 202
+});
+
 // ── CONTROLLERS + SWAGGER ─────────────────────────────────────────────────────
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Multipart form default limit (128MB) is below our 200MB video cap — raise it here;
+// [RequestSizeLimit] on the upload action handles the Kestrel-side request body limit.
+builder.Services.Configure<Microsoft.AspNetCore.Http.Features.FormOptions>(options =>
+{
+    options.MultipartBodyLengthLimit = 210L * 1024 * 1024;
+});
 
 // ── BUILD ─────────────────────────────────────────────────────────────────────
 builder.WebHost.UseUrls("http://0.0.0.0:5186");
@@ -116,6 +133,18 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+// Serve keyframe thumbnails at /storage/videos/... (matches Video:PublicBaseUrl)
+var videoStorageRoot = builder.Configuration["Video:StorageRoot"];
+var videoStoragePath = string.IsNullOrWhiteSpace(videoStorageRoot)
+    ? Path.Combine(AppContext.BaseDirectory, "storage", "videos")
+    : videoStorageRoot;
+Directory.CreateDirectory(videoStoragePath);
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(videoStoragePath),
+    RequestPath  = "/storage/videos",
+});
 
 app.UseCors("Frontend");
 app.UseAuthentication();

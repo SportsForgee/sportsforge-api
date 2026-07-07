@@ -41,5 +41,14 @@ namespace Api.Models.Dtos
         public double? AvgImpactForce         { get; set; }
         public int     ReadingCount           { get; set; }
         public DateTime? LastReadingAt        { get; set; }
+
+        // Top Speed has no insole/wearable source yet — Forge Insole hasn't shipped.
+        // Video analysis is the only source of TopSpeedKmh and (as a fallback, when no
+        // insole readings exist) AvgBalanceScore right now. These *Source fields tell the
+        // frontend where a value came from so it never has to guess or show a fabricated
+        // number — "video" | "insole" | null (field genuinely unavailable).
+        public double? TopSpeedKmh           { get; set; }
+        public string? TopSpeedSource        { get; set; }
+        public string? BalanceScoreSource    { get; set; }
     }
 }

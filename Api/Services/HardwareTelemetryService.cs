@@ -156,17 +156,41 @@ namespace Api.Services
                 .Where(r => r.AthleteId == athleteId && r.Timestamp >= since)
                 .ToListAsync();
 
+            // Forge Insole hasn't shipped — Top Speed has no insole/wearable source at all,
+            // and Balance falls back to the latest analyzed video when no insole readings
+            // exist yet. Once real insole data exists it always wins for balance.
+            var latestVideoResult = await _db.VideoUploads
+                .Where(v => v.AthleteId == athleteId)
+                .Join(_db.VideoAnalysisResults, v => v.Id, r => r.VideoUploadId, (v, r) => r)
+                .OrderByDescending(r => r.CreatedAt)
+                .FirstOrDefaultAsync();
+
+            var topSpeed = latestVideoResult?.TopSpeedKmh;
+            var topSpeedSource = topSpeed.HasValue ? "video" : null;
+
             if (readings.Count == 0)
-                return new InsoleSummaryDto { ReadingCount = 0 };
+            {
+                return new InsoleSummaryDto
+                {
+                    ReadingCount        = 0,
+                    AvgBalanceScore     = latestVideoResult?.GaitBalanceScore,
+                    BalanceScoreSource  = latestVideoResult?.GaitBalanceScore.HasValue == true ? "video" : null,
+                    TopSpeedKmh         = topSpeed,
+                    TopSpeedSource      = topSpeedSource,
+                };
+            }
 
             return new InsoleSummaryDto
             {
                 AvgCadence           = readings.Where(r => r.Cadence.HasValue).Select(r => r.Cadence!.Value).DefaultIfEmpty().Average(),
                 AvgBalanceScore      = readings.Where(r => r.BalanceScore.HasValue).Select(r => r.BalanceScore!.Value).DefaultIfEmpty().Average(),
+                BalanceScoreSource   = "insole",
                 AvgStrideAsymmetryPct= readings.Where(r => r.StrideAsymmetryPct.HasValue).Select(r => r.StrideAsymmetryPct!.Value).DefaultIfEmpty().Average(),
                 AvgImpactForce       = readings.Where(r => r.ImpactForce.HasValue).Select(r => r.ImpactForce!.Value).DefaultIfEmpty().Average(),
                 ReadingCount         = readings.Count,
                 LastReadingAt        = readings.Max(r => r.Timestamp),
+                TopSpeedKmh          = topSpeed,
+                TopSpeedSource       = topSpeedSource,
             };
         }
 
