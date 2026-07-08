@@ -6,6 +6,10 @@ namespace Api.Services
     {
         ClubDashboardData GetDashboard();
 
+        IReadOnlyList<ClubSquadPlayer> GetSquad();
+
+        IReadOnlyList<RecruitmentProspect> GetRecruitmentShortlist();
+
         IReadOnlyList<MedicalWatchlistItem> GetMedicalWatchlist();
 
         MedicalWatchlistItem UpsertMedicalUpdate(CreateMedicalWatchlistUpdateRequest request);

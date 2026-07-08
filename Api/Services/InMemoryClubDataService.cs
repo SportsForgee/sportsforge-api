@@ -4,6 +4,88 @@ namespace Api.Services
 {
     public class InMemoryClubDataService : IClubDataService
     {
+        private readonly List<ClubSquadPlayer> _squad =
+        [
+            new ClubSquadPlayer
+            {
+                Id = 1,
+                Name = "M. Al-Hakim",
+                Position = "ST",
+                Age = 24,
+                Form = 88,
+                Value = "$12.8M",
+                Availability = "Available",
+            },
+            new ClubSquadPlayer
+            {
+                Id = 2,
+                Name = "J. Mensah",
+                Position = "CM",
+                Age = 27,
+                Form = 81,
+                Value = "$9.5M",
+                Availability = "Monitor",
+            },
+            new ClubSquadPlayer
+            {
+                Id = 3,
+                Name = "R. Duarte",
+                Position = "CB",
+                Age = 29,
+                Form = 79,
+                Value = "$8.1M",
+                Availability = "Available",
+            },
+            new ClubSquadPlayer
+            {
+                Id = 4,
+                Name = "L. Nakanishi",
+                Position = "RW",
+                Age = 22,
+                Form = 84,
+                Value = "$14.2M",
+                Availability = "Injured",
+            },
+            new ClubSquadPlayer
+            {
+                Id = 5,
+                Name = "T. Diallo",
+                Position = "LB",
+                Age = 25,
+                Form = 76,
+                Value = "$7.6M",
+                Availability = "Available",
+            },
+        ];
+
+        private readonly List<RecruitmentProspect> _recruitmentShortlist =
+        [
+            new RecruitmentProspect
+            {
+                Name = "K. Petrov",
+                Position = "AM",
+                Club = "Sofia United",
+                Score = 91,
+                MarketValue = "$5.2M",
+            },
+            new RecruitmentProspect
+            {
+                Name = "A. Bako",
+                Position = "CB",
+                Club = "Lagos Stars",
+                Score = 87,
+                MarketValue = "$4.1M",
+            },
+            new RecruitmentProspect
+            {
+                Name = "N. Salim",
+                Position = "RW",
+                Club = "Cairo FC",
+                Score = 85,
+                MarketValue = "$6.3M",
+            },
+        ];
+
         private readonly List<MedicalWatchlistItem> _medicalWatchlist =
         [
             new MedicalWatchlistItem
@@ -80,6 +162,37 @@ namespace Api.Services
                     .ToList(),
                 MedicalWatchlist = watchlist,
             };
+        }
+
+        public IReadOnlyList<ClubSquadPlayer> GetSquad()
+        {
+            return _squad
+                .Select(player => new ClubSquadPlayer
+                {
+                    Id = player.Id,
+                    Name = player.Name,
+                    Position = player.Position,
+                    Age = player.Age,
+                    Form = player.Form,
+                    Value = player.Value,
+                    Availability = player.Availability,
+                })
+                .ToList();
+        }
+
+        public IReadOnlyList<RecruitmentProspect> GetRecruitmentShortlist()
+        {
+            return _recruitmentShortlist
+                .OrderByDescending(prospect => prospect.Score)
+                .Select(prospect => new RecruitmentProspect
+                {
+                    Name = prospect.Name,
+                    Position = prospect.Position,
+                    Club = prospect.Club,
+                    Score = prospect.Score,
+                    MarketValue = prospect.MarketValue,
+                })
+                .ToList();
         }
 
         public IReadOnlyList<MedicalWatchlistItem> GetMedicalWatchlist()
