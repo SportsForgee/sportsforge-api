@@ -122,6 +122,55 @@ namespace Api.Controllers
             return Ok(chats.OrderByDescending(c => ((dynamic)c).lastMessageTime));
         }
 
+        // GET /api/messages/conversations — everyone the caller has exchanged
+        // direct messages with, newest first, with a last-message preview and
+        // unread count. This is what powers the mobile/coach inbox list; use
+        // GET /api/messages/users separately to start a conversation with
+        // someone new who isn't in this list yet.
+        [HttpGet("conversations")]
+        public async Task<IActionResult> GetConversations()
+        {
+            var myId = GetUserId();
+
+            var otherIds = await _db.Messages
+                .Where(m => m.ChannelId == null && (m.SenderId == myId || m.ReceiverId == myId))
+                .Select(m => m.SenderId == myId ? m.ReceiverId! : m.SenderId)
+                .Distinct()
+                .ToListAsync();
+
+            var conversations = new List<ConversationDto>();
+
+            foreach (var otherId in otherIds)
+            {
+                var otherUser = await _users.FindByIdAsync(otherId);
+                if (otherUser == null) continue;
+
+                var lastMsg = await _db.Messages
+                    .Where(m => m.ChannelId == null &&
+                                ((m.SenderId == myId && m.ReceiverId == otherId) ||
+                                 (m.SenderId == otherId && m.ReceiverId == myId)))
+                    .OrderByDescending(m => m.SentAt)
+                    .FirstOrDefaultAsync();
+
+                var unreadCount = await _db.Messages
+                    .CountAsync(m => m.SenderId == otherId && m.ReceiverId == myId && !m.IsRead);
+
+                conversations.Add(new ConversationDto
+                {
+                    UserId            = otherUser.Id,
+                    Name              = $"{otherUser.FirstName} {otherUser.LastName}".Trim(),
+                    Role              = otherUser.SfRole,
+                    Organisation      = otherUser.Organisation,
+                    LastMessage       = lastMsg?.Content,
+                    LastMessageAt     = lastMsg?.SentAt,
+                    LastMessageIsMine = lastMsg?.SenderId == myId,
+                    UnreadCount       = unreadCount,
+                });
+            }
+
+            return Ok(conversations.OrderByDescending(c => c.LastMessageAt));
+        }
+
         // ── Direct Messages ───────────────────────────────────────────────────────
 
         // GET /api/messages/direct/{otherId}?page=1

@@ -26,6 +26,13 @@ namespace Api.Data
         public DbSet<WearableReading> WearableReadings { get; set; }
         public DbSet<SyncSession>     SyncSessions     { get; set; }
 
+        // Doctor-managed athlete medical records
+        public DbSet<AthleteMedicalRecord> AthleteMedicalRecords { get; set; }
+
+        // Video analysis (Phase 4 — Top Speed / Gait-Balance via OpenCV + MediaPipe)
+        public DbSet<VideoUpload>         VideoUploads         { get; set; }
+        public DbSet<VideoAnalysisResult> VideoAnalysisResults { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -161,6 +168,38 @@ namespace Api.Data
                  .HasForeignKey(s => s.DeviceId)
                  .OnDelete(DeleteBehavior.Cascade);
                 e.HasIndex(s => s.DeviceId);
+            });
+
+            builder.Entity<AthleteMedicalRecord>(e =>
+            {
+                e.HasOne(r => r.Athlete)
+                 .WithMany()
+                 .HasForeignKey(r => r.AthleteId)
+                 .OnDelete(DeleteBehavior.Cascade);
+                e.HasIndex(r => r.AthleteId).IsUnique();
+            });
+
+            // Video analysis
+            builder.Entity<VideoUpload>(e =>
+            {
+                e.HasOne(v => v.Athlete)
+                 .WithMany()
+                 .HasForeignKey(v => v.AthleteId)
+                 .OnDelete(DeleteBehavior.Restrict);
+                e.HasOne(v => v.UploadedBy)
+                 .WithMany()
+                 .HasForeignKey(v => v.UploadedByUserId)
+                 .OnDelete(DeleteBehavior.Restrict);
+                e.HasIndex(v => v.AthleteId);
+            });
+
+            builder.Entity<VideoAnalysisResult>(e =>
+            {
+                e.HasOne(r => r.VideoUpload)
+                 .WithMany()
+                 .HasForeignKey(r => r.VideoUploadId)
+                 .OnDelete(DeleteBehavior.Cascade);
+                e.HasIndex(r => r.VideoUploadId);
             });
         }
     }
