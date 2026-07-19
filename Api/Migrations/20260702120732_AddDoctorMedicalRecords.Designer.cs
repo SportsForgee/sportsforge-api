@@ -4,6 +4,7 @@ using Api.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260702120732_AddDoctorMedicalRecords")]
+    partial class AddDoctorMedicalRecords
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -579,90 +582,6 @@ namespace Api.Migrations
                     b.ToTable("TrainingSessions");
                 });
 
-            modelBuilder.Entity("Api.Models.VideoAnalysisResult", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AnomalyCount")
-                        .HasColumnType("int");
-
-                    b.Property<string>("CalibrationMethod")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<double?>("GaitBalanceScore")
-                        .HasColumnType("float");
-
-                    b.Property<string>("ResultJson")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double?>("SymmetryScore")
-                        .HasColumnType("float");
-
-                    b.Property<double?>("TopSpeedKmh")
-                        .HasColumnType("float");
-
-                    b.Property<string>("VideoUploadId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("VideoUploadId");
-
-                    b.ToTable("VideoAnalysisResults");
-                });
-
-            modelBuilder.Entity("Api.Models.VideoUpload", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("AthleteId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<double?>("DurationSeconds")
-                        .HasColumnType("float");
-
-                    b.Property<string>("FileName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long>("SizeBytes")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("StoragePath")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UploadedByUserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AthleteId");
-
-                    b.HasIndex("UploadedByUserId");
-
-                    b.ToTable("VideoUploads");
-                });
-
             modelBuilder.Entity("Api.Models.WearableReading", b =>
                 {
                     b.Property<int>("Id")
@@ -1005,36 +924,6 @@ namespace Api.Migrations
                         .IsRequired();
 
                     b.Navigation("Coach");
-                });
-
-            modelBuilder.Entity("Api.Models.VideoAnalysisResult", b =>
-                {
-                    b.HasOne("Api.Models.VideoUpload", "VideoUpload")
-                        .WithMany()
-                        .HasForeignKey("VideoUploadId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("VideoUpload");
-                });
-
-            modelBuilder.Entity("Api.Models.VideoUpload", b =>
-                {
-                    b.HasOne("Api.Models.AppUser", "Athlete")
-                        .WithMany()
-                        .HasForeignKey("AthleteId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Api.Models.AppUser", "UploadedBy")
-                        .WithMany()
-                        .HasForeignKey("UploadedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Athlete");
-
-                    b.Navigation("UploadedBy");
                 });
 
             modelBuilder.Entity("Api.Models.WearableReading", b =>
