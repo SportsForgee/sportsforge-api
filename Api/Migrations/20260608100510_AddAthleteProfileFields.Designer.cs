@@ -4,6 +4,7 @@ using Api.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260608100510_AddAthleteProfileFields")]
+    partial class AddAthleteProfileFields
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -123,38 +126,6 @@ namespace Api.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("Api.Models.AthleteMedicalRecord", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("AthleteId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<bool>("ClearanceGranted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UpdatedByDoctorId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AthleteId")
-                        .IsUnique();
-
-                    b.ToTable("AthleteMedicalRecords");
-                });
-
             modelBuilder.Entity("Api.Models.Channel", b =>
                 {
                     b.Property<string>("Id")
@@ -207,52 +178,6 @@ namespace Api.Migrations
                         .IsUnique();
 
                     b.ToTable("ChannelMembers");
-                });
-
-            modelBuilder.Entity("Api.Models.Device", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("AthleteId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int?>("BatteryPercent")
-                        .HasColumnType("int");
-
-                    b.Property<string>("FirmwareVersion")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("LastSyncAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("PairedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("SerialNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AthleteId");
-
-                    b.HasIndex("SerialNumber")
-                        .IsUnique();
-
-                    b.ToTable("Devices");
                 });
 
             modelBuilder.Entity("Api.Models.Drill", b =>
@@ -350,58 +275,6 @@ namespace Api.Migrations
                         .IsUnique();
 
                     b.ToTable("DrillCompletions");
-                });
-
-            modelBuilder.Entity("Api.Models.InsoleReading", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("AthleteId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<double?>("BalanceScore")
-                        .HasColumnType("float");
-
-                    b.Property<double?>("Cadence")
-                        .HasColumnType("float");
-
-                    b.Property<int>("DeviceId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Foot")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FootStrike")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double?>("GroundContactMs")
-                        .HasColumnType("float");
-
-                    b.Property<double?>("ImpactForce")
-                        .HasColumnType("float");
-
-                    b.Property<string>("PressureMapJson")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double?>("StrideAsymmetryPct")
-                        .HasColumnType("float");
-
-                    b.Property<DateTime>("Timestamp")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DeviceId");
-
-                    b.HasIndex("AthleteId", "Timestamp");
-
-                    b.ToTable("InsoleReadings");
                 });
 
             modelBuilder.Entity("Api.Models.Message", b =>
@@ -507,37 +380,6 @@ namespace Api.Migrations
                     b.ToTable("SessionParticipants");
                 });
 
-            modelBuilder.Entity("Api.Models.SyncSession", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime?>("CompletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("DeviceId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PacketCount")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Source")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("StartedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DeviceId");
-
-                    b.ToTable("SyncSessions");
-                });
-
             modelBuilder.Entity("Api.Models.TrainingSession", b =>
                 {
                     b.Property<int>("Id")
@@ -577,135 +419,6 @@ namespace Api.Migrations
                     b.HasIndex("ScheduledAt");
 
                     b.ToTable("TrainingSessions");
-                });
-
-            modelBuilder.Entity("Api.Models.VideoAnalysisResult", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AnomalyCount")
-                        .HasColumnType("int");
-
-                    b.Property<string>("CalibrationMethod")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<double?>("GaitBalanceScore")
-                        .HasColumnType("float");
-
-                    b.Property<string>("ResultJson")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double?>("SymmetryScore")
-                        .HasColumnType("float");
-
-                    b.Property<double?>("TopSpeedKmh")
-                        .HasColumnType("float");
-
-                    b.Property<string>("VideoUploadId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("VideoUploadId");
-
-                    b.ToTable("VideoAnalysisResults");
-                });
-
-            modelBuilder.Entity("Api.Models.VideoUpload", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("AthleteId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<double?>("DurationSeconds")
-                        .HasColumnType("float");
-
-                    b.Property<string>("FileName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long>("SizeBytes")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("StoragePath")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UploadedByUserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AthleteId");
-
-                    b.HasIndex("UploadedByUserId");
-
-                    b.ToTable("VideoUploads");
-                });
-
-            modelBuilder.Entity("Api.Models.WearableReading", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("AthleteId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("DeviceId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("HeartRate")
-                        .HasColumnType("int");
-
-                    b.Property<double?>("HydrationPct")
-                        .HasColumnType("float");
-
-                    b.Property<double?>("RecoveryScore")
-                        .HasColumnType("float");
-
-                    b.Property<double?>("SpO2")
-                        .HasColumnType("float");
-
-                    b.Property<double?>("StaminaPct")
-                        .HasColumnType("float");
-
-                    b.Property<double?>("StressLevel")
-                        .HasColumnType("float");
-
-                    b.Property<DateTime>("Timestamp")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DeviceId");
-
-                    b.HasIndex("AthleteId", "Timestamp");
-
-                    b.ToTable("WearableReadings");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -841,17 +554,6 @@ namespace Api.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Api.Models.AthleteMedicalRecord", b =>
-                {
-                    b.HasOne("Api.Models.AppUser", "Athlete")
-                        .WithMany()
-                        .HasForeignKey("AthleteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Athlete");
-                });
-
             modelBuilder.Entity("Api.Models.ChannelMember", b =>
                 {
                     b.HasOne("Api.Models.Channel", "Channel")
@@ -869,17 +571,6 @@ namespace Api.Migrations
                     b.Navigation("Channel");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Api.Models.Device", b =>
-                {
-                    b.HasOne("Api.Models.AppUser", "Athlete")
-                        .WithMany()
-                        .HasForeignKey("AthleteId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Athlete");
                 });
 
             modelBuilder.Entity("Api.Models.Drill", b =>
@@ -910,25 +601,6 @@ namespace Api.Migrations
                     b.Navigation("Athlete");
 
                     b.Navigation("SessionDrill");
-                });
-
-            modelBuilder.Entity("Api.Models.InsoleReading", b =>
-                {
-                    b.HasOne("Api.Models.AppUser", "Athlete")
-                        .WithMany()
-                        .HasForeignKey("AthleteId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Api.Models.Device", "Device")
-                        .WithMany()
-                        .HasForeignKey("DeviceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Athlete");
-
-                    b.Navigation("Device");
                 });
 
             modelBuilder.Entity("Api.Models.Message", b =>
@@ -985,17 +657,6 @@ namespace Api.Migrations
                     b.Navigation("Session");
                 });
 
-            modelBuilder.Entity("Api.Models.SyncSession", b =>
-                {
-                    b.HasOne("Api.Models.Device", "Device")
-                        .WithMany()
-                        .HasForeignKey("DeviceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Device");
-                });
-
             modelBuilder.Entity("Api.Models.TrainingSession", b =>
                 {
                     b.HasOne("Api.Models.AppUser", "Coach")
@@ -1005,55 +666,6 @@ namespace Api.Migrations
                         .IsRequired();
 
                     b.Navigation("Coach");
-                });
-
-            modelBuilder.Entity("Api.Models.VideoAnalysisResult", b =>
-                {
-                    b.HasOne("Api.Models.VideoUpload", "VideoUpload")
-                        .WithMany()
-                        .HasForeignKey("VideoUploadId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("VideoUpload");
-                });
-
-            modelBuilder.Entity("Api.Models.VideoUpload", b =>
-                {
-                    b.HasOne("Api.Models.AppUser", "Athlete")
-                        .WithMany()
-                        .HasForeignKey("AthleteId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Api.Models.AppUser", "UploadedBy")
-                        .WithMany()
-                        .HasForeignKey("UploadedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Athlete");
-
-                    b.Navigation("UploadedBy");
-                });
-
-            modelBuilder.Entity("Api.Models.WearableReading", b =>
-                {
-                    b.HasOne("Api.Models.AppUser", "Athlete")
-                        .WithMany()
-                        .HasForeignKey("AthleteId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Api.Models.Device", "Device")
-                        .WithMany()
-                        .HasForeignKey("DeviceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Athlete");
-
-                    b.Navigation("Device");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
