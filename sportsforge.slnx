@@ -1,4 +1,6 @@
 <Solution>
   <Project Path="Api/Api.csproj" />
   <Project Path="khoiIntegration/khoiIntegration.csproj" />
+  <Project Path="ForgeInsole/ForgeInsole.Data/ForgeInsole.Data.csproj" />
+  <Project Path="ForgeInsole/ForgeInsole.Api/ForgeInsole.Api.csproj" />
 </Solution>
