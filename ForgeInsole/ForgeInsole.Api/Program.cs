@@ -1,4 +1,5 @@
 using ForgeInsole.Api.Auth;
+using ForgeInsole.Api.Devices;
 using ForgeInsole.Api.Services;
 using ForgeInsole.Data;
 using Microsoft.EntityFrameworkCore;
@@ -50,6 +51,16 @@ builder.Services.AddAuthorization();
 // ── TELEMETRY GENERATION ──────────────────────────────────────────────────────
 builder.Services.AddSingleton<TelemetryBroadcaster>();
 builder.Services.AddHostedService<InsoleTelemetryHostedService>();
+
+// ── REAL HARDWARE INGEST ──────────────────────────────────────────────────────
+// Connects out to each configured ESP32's WebSocket server (firmware port 81) and files
+// its frames as ordinary TelemetryReadings. Inert unless ForgeInsole:DeviceIngest:Devices
+// is populated, so a default checkout still behaves as the pure simulator it was.
+builder.Services.Configure<DeviceIngestOptions>(builder.Configuration.GetSection(DeviceIngestOptions.SectionName));
+builder.Services.AddSingleton<DeviceRegistry>();
+builder.Services.AddSingleton<InsoleScanner>();
+builder.Services.AddSingleton<InsoleDeviceManager>();
+builder.Services.AddHostedService<DeviceIngestHostedService>();
 
 // ── HEALTH ────────────────────────────────────────────────────────────────────
 builder.Services.AddHealthChecks();

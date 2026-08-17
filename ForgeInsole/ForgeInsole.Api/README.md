@@ -36,7 +36,8 @@ environment, and rotate the dev key if it's ever pasted somewhere public.
 
 | Method | Path                          | Description                                   |
 |--------|-------------------------------|------------------------------------------------|
-| GET    | `/`                            | List all insoles + metadata                    |
+| GET    | `/`                            | List all insoles + metadata (incl. `source`: `Simulated`/`Device`) |
+| GET    | `/devices`                     | Live connection state of each configured physical insole |
 | GET    | `/{id}`                        | Single insole detail                           |
 | GET    | `/{id}/telemetry?from=&to=&limit=` | Historical readings (limit defaults to 100, capped at 1000) |
 | GET    | `/{id}/stream`                 | Live readings via Server-Sent Events (`text/event-stream`) |
@@ -45,13 +46,121 @@ environment, and rotate the dev key if it's ever pasted somewhere public.
 generator publishes to (`Services/TelemetryBroadcaster.cs`) — it does not run a
 second generator, so what you see live always matches what lands in the DB.
 
-## How the data is generated
+## Where the data comes from
 
-`InsoleTelemetryHostedService` (a `BackgroundService`) ticks every
+Two sources, both landing in the same tables and the same SSE fan-out. Every
+insole and every reading carries a `source` field so you can always tell which:
+
+**Simulated** — `InsoleTelemetryHostedService` ticks every
 `ForgeInsole:GenerationIntervalMs` (default 2000ms), generates one reading per
-`Active` insole via `TelemetryGenerator.NextReading()`, saves it, and publishes it
-to any live SSE subscribers. Each hosted-service run is tracked as one
-`SimulationSession` row.
+insole that is `Active` **and** `Source == Simulated` via
+`TelemetryGenerator.NextReading()`, saves it, and publishes it to any live SSE
+subscribers. Each hosted-service run is tracked as one `SimulationSession` row.
+
+**Real hardware** — `DeviceIngestHostedService` connects out to each configured
+ESP32. See the next section.
+
+## Streaming from a real Forge Insole (ESP32, WiFi firmware)
+
+The WiFi firmware is a WebSocket *server* on port 81 with no outbound HTTP
+client, so **this API connects out to the board** — no firmware changes needed.
+The only requirement is that the machine running this API can reach the ESP32 on
+the network.
+
+### 1. Get the board on WiFi and note its address
+
+Flash the WiFi sketch, open Serial at 115200, and read the banner it prints every
+5 seconds:
+
+```
+[net] WiFi OK "DANIEL"  192.168.1.42  -51 dBm  |  dashboard http://192.168.1.42/  |  ws://192.168.1.42:81  |  0 client(s), 0 frames sent
+```
+
+Confirm it independently before involving this API at all — open
+`http://192.168.1.42/` in a browser. You should get a plain-text status page.
+
+### 2. Point the API at it
+
+In `appsettings.Development.json`:
+
+```jsonc
+"ForgeInsole": {
+  "DeviceIngest": {
+    "Devices": [
+      { "Host": "forge-insole-l.local", "WsPort": 81, "Password": "112233" }
+    ]
+  }
+}
+```
+
+`Host` takes the firmware's mDNS name (`MDNS_HOST` in the sketch, resolvable on
+Windows 10+/macOS) **or** a plain IP. Use the IP if `.local` doesn't resolve —
+many guest and corporate networks filter mDNS. `Password` must match
+`DEVICE_PASSWORD` in the sketch.
+
+Add a second entry for the right-foot unit; each device connects and reconnects
+independently.
+
+For a second insole or a production key, prefer env vars over the file:
+
+```
+ForgeInsole__DeviceIngest__Devices__1__Host=192.168.1.43
+ForgeInsole__DeviceIngest__Devices__1__Password=…
+```
+
+### 3. Run it and check the connection
+
+```
+dotnet run
+```
+
+```
+curl -H "X-Api-Key: ForgeInsole-Dev-PartnerKey-Khoi-2026" http://localhost:5290/api/v1/insoles/devices
+```
+
+`state` walks `Connecting` → `Authenticating` → `Streaming`. When something is
+wrong, `lastError` says what:
+
+| `lastError` | Meaning |
+|---|---|
+| `Unable to connect to the remote server` | Wrong host/IP, board off, or a different subnet |
+| `device rejected the configured password …` | `Password` ≠ `DEVICE_PASSWORD` |
+| `no frame received for 15s …` | Connected, then went silent — usually the brown-out the firmware warns about (check the 3.3V rail / add a 100µF cap) |
+
+`mpuOk: false` or `mpuStalled: true` means the board is streaming but its IMU is
+not healthy — accel/gyro values will be flat zeros. Pressure data is unaffected.
+
+### 4. The device registers itself
+
+On its first frame the device upserts its own `Insole` row from the identity in
+the firmware (`DEVICE_ID`, `DEVICE_NAME`, `UNIT_FOOT`, `FW_VERSION`) — so
+`FRG-2026-P01` appears in `GET /api/v1/insoles` with `"source": "Device"`
+alongside the six seeded simulated ones. Set `InsoleId` in config to file its
+readings under a different id instead.
+
+Marking an insole `Device` is also what stops the simulator generating fake
+readings for that same id. To turn simulation off entirely, set
+`ForgeInsole:SimulationEnabled=false`.
+
+### Sampling and mapping caveats
+
+- SSE subscribers get **every** frame at the firmware's full 10 Hz. Only DB
+  writes are throttled (`PersistIntervalMs`, default 1s), and each window stores
+  its **most-loaded** frame rather than whichever arrived on the tick — a
+  fixed-period sample aliases against the step cycle and would mostly record the
+  foot mid-swing.
+- The firmware has four pressure zones; this API's schema has three. `midfoot` is
+  the mean of the two arch sensors.
+- `cadence` is **single-foot** steps/min from the device, roughly half the
+  two-foot cadence the simulator produces.
+- `impactForce` from a device is an **uncalibrated relative load index**, not
+  body weights — FSRs are not load cells.
+- `strideAsymmetryPct` from a device is medial/lateral imbalance *within* that
+  foot; true stride asymmetry needs both feet compared.
+- `timestamp` is stamped on arrival; the ESP32 reports `millis()` since boot and
+  has no RTC.
+
+Full field-by-field mapping: [`docs/forge-insole/ARCHITECTURE.md` §9](../../../docs/forge-insole/ARCHITECTURE.md).
 
 ## EXTRACTION PATH
 

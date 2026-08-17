@@ -27,6 +27,15 @@ namespace ForgeInsole.Data.Entities
         public double StrideAsymmetryPct { get; set; }
         public double ImpactForce { get; set; }
 
+        // Cumulative step count for the device's current session. The generator has no notion
+        // of steps (it invents cadence directly), so this stays 0 for simulated readings — it's
+        // only meaningful on rows with Source == Device.
+        public int Steps { get; set; }
+
+        // Same axis as Insole.Source, recorded per reading so a table holding both simulated
+        // history and live device data stays self-describing after the fact.
+        public InsoleSource Source { get; set; } = InsoleSource.Simulated;
+
         public Guid? SimulationSessionId { get; set; }
     }
 }

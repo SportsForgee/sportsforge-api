@@ -12,6 +12,7 @@ namespace ForgeInsole.Api.Services
         private readonly TelemetryBroadcaster _broadcaster;
         private readonly ILogger<InsoleTelemetryHostedService> _logger;
         private readonly int _intervalMs;
+        private readonly bool _enabled;
         private readonly Dictionary<string, InsoleGeneratorState> _state = new();
 
         public InsoleTelemetryHostedService(
@@ -24,10 +25,19 @@ namespace ForgeInsole.Api.Services
             _broadcaster = broadcaster;
             _logger = logger;
             _intervalMs = configuration.GetValue<int?>("ForgeInsole:GenerationIntervalMs") ?? 2000;
+            _enabled = configuration.GetValue<bool?>("ForgeInsole:SimulationEnabled") ?? true;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            if (!_enabled)
+            {
+                _logger.LogInformation(
+                    "Forge Insole telemetry generator disabled (ForgeInsole:SimulationEnabled=false) — " +
+                    "only real device readings will be recorded.");
+                return;
+            }
+
             var session = new SimulationSession { StartedAt = DateTime.UtcNow };
             await using (var scope = _scopeFactory.CreateAsyncScope())
             {
@@ -50,9 +60,13 @@ namespace ForgeInsole.Api.Services
                         await using var scope = _scopeFactory.CreateAsyncScope();
                         var db = scope.ServiceProvider.GetRequiredService<ForgeInsoleDbContext>();
 
+                        // Source == Simulated is the guard that keeps generated readings from
+                        // interleaving with real ones for an insole a physical device is
+                        // streaming into (DeviceIngestHostedService flips the row to Device on
+                        // its first frame).
                         var activeInsoles = await db.Insoles
                             .AsNoTracking()
-                            .Where(i => i.Status == InsoleStatus.Active)
+                            .Where(i => i.Status == InsoleStatus.Active && i.Source == InsoleSource.Simulated)
                             .ToListAsync(stoppingToken);
 
                         foreach (var insole in activeInsoles)

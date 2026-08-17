@@ -21,6 +21,7 @@ namespace ForgeInsole.Data
                 e.HasKey(i => i.InsoleId);
                 e.Property(i => i.Status).HasConversion<string>().HasMaxLength(16);
                 e.Property(i => i.Side).HasConversion<string>().HasMaxLength(1);
+                e.Property(i => i.Source).HasConversion<string>().HasMaxLength(16);
 
                 e.HasData(SeedInsoles());
             });
@@ -28,6 +29,7 @@ namespace ForgeInsole.Data
             builder.Entity<TelemetryReading>(e =>
             {
                 e.HasIndex(r => new { r.InsoleId, r.Timestamp });
+                e.Property(r => r.Source).HasConversion<string>().HasMaxLength(16);
                 e.HasOne<Insole>()
                  .WithMany()
                  .HasForeignKey(r => r.InsoleId)

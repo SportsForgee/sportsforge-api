@@ -94,6 +94,14 @@ namespace Api.Services
                         StrideAsymmetryPct = r.StrideAsymmetryPct,
                         ImpactForce = r.ImpactForce,
                         BalanceScore = r.GaitBalance,
+                        // 0 on simulated readings — only a real device counts steps.
+                        Steps = r.Steps,
+                        AccelX = r.Imu?.Accel?.X,
+                        AccelY = r.Imu?.Accel?.Y,
+                        AccelZ = r.Imu?.Accel?.Z,
+                        GyroX = r.Imu?.Gyro?.X,
+                        GyroY = r.Imu?.Gyro?.Y,
+                        GyroZ = r.Imu?.Gyro?.Z,
                     }).ToList(),
                 });
 

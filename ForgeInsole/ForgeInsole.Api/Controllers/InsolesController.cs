@@ -1,5 +1,6 @@
 using System.Text.Json;
 using ForgeInsole.Api.Auth;
+using ForgeInsole.Api.Devices;
 using ForgeInsole.Api.Dtos;
 using ForgeInsole.Api.Services;
 using ForgeInsole.Data;
@@ -19,11 +20,13 @@ namespace ForgeInsole.Api.Controllers
 
         private readonly ForgeInsoleDbContext _db;
         private readonly TelemetryBroadcaster _broadcaster;
+        private readonly DeviceRegistry _devices;
 
-        public InsolesController(ForgeInsoleDbContext db, TelemetryBroadcaster broadcaster)
+        public InsolesController(ForgeInsoleDbContext db, TelemetryBroadcaster broadcaster, DeviceRegistry devices)
         {
             _db = db;
             _broadcaster = broadcaster;
+            _devices = devices;
         }
 
         [HttpGet]
@@ -32,6 +35,12 @@ namespace ForgeInsole.Api.Controllers
             var insoles = await _db.Insoles.AsNoTracking().OrderBy(i => i.InsoleId).ToListAsync(ct);
             return Ok(insoles.Select(ToDto));
         }
+
+        // Literal segment, so it takes routing precedence over "{id}" and can never be
+        // shadowed by an insole literally called "devices".
+        [HttpGet("devices")]
+        public ActionResult<IEnumerable<DeviceStatusDto>> GetDevices()
+            => Ok(_devices.All().OrderBy(d => d.Key).Select(ToStatusDto));
 
         [HttpGet("{id}")]
         public async Task<ActionResult<InsoleDto>> GetInsole(string id, CancellationToken ct)
@@ -108,7 +117,7 @@ namespace ForgeInsole.Api.Controllers
         }
 
         private static InsoleDto ToDto(Insole i) =>
-            new(i.InsoleId, i.Label, i.Status.ToString(), i.Firmware, i.Side.ToString(), i.CreatedAt);
+            new(i.InsoleId, i.Label, i.Status.ToString(), i.Firmware, i.Side.ToString(), i.CreatedAt, i.Source.ToString());
 
         private static TelemetryReadingDto ToDto(TelemetryReading r) => new(
             r.Timestamp,
@@ -119,6 +128,43 @@ namespace ForgeInsole.Api.Controllers
             r.ContactTimeMs,
             r.FootStrike,
             r.StrideAsymmetryPct,
-            r.ImpactForce);
+            r.ImpactForce,
+            r.Steps,
+            r.Source.ToString());
+
+        // Public so DevicesController returns the identical status shape — two different
+        // spellings of "connected device" across two endpoints would be a trap for clients.
+        public static DeviceStatusDto ToStatusDto(DeviceStatus d) => new(
+            d.Key,
+            d.Host,
+            d.WsPort,
+            d.State.ToString(),
+            d.InsoleId,
+            d.DeviceName,
+            d.Firmware,
+            d.Foot,
+            d.ConnectedAt,
+            d.LastFrameAt,
+            d.FramesReceived,
+            d.ReadingsPersisted,
+            d.LastError,
+            d.MpuOk,
+            d.MpuStalled,
+            d.Steps,
+            ParseFrame(d.LastFrameJson));
+
+        // Re-parsed rather than stored as JsonElement: JsonDocument owns pooled memory that
+        // must be disposed, and holding one indefinitely on a long-lived status object would
+        // leak. Clone() detaches the element from the document before it is released.
+        private static JsonElement? ParseFrame(string? json)
+        {
+            if (string.IsNullOrWhiteSpace(json)) return null;
+            try
+            {
+                using var doc = JsonDocument.Parse(json);
+                return doc.RootElement.Clone();
+            }
+            catch (JsonException) { return null; }
+        }
     }
 }
