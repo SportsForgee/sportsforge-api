@@ -4,6 +4,7 @@ using Api.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260815231600_AddInsoleSteps")]
+    partial class AddInsoleSteps
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -360,15 +363,6 @@ namespace Api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<double?>("AccelX")
-                        .HasColumnType("float");
-
-                    b.Property<double?>("AccelY")
-                        .HasColumnType("float");
-
-                    b.Property<double?>("AccelZ")
-                        .HasColumnType("float");
-
                     b.Property<string>("AthleteId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -390,15 +384,6 @@ namespace Api.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<double?>("GroundContactMs")
-                        .HasColumnType("float");
-
-                    b.Property<double?>("GyroX")
-                        .HasColumnType("float");
-
-                    b.Property<double?>("GyroY")
-                        .HasColumnType("float");
-
-                    b.Property<double?>("GyroZ")
                         .HasColumnType("float");
 
                     b.Property<double?>("ImpactForce")

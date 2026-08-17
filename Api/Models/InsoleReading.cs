@@ -14,6 +14,16 @@ namespace Api.Models
         public double?  StrideAsymmetryPct { get; set; }
         public double?  ImpactForce        { get; set; }
         public double?  BalanceScore       { get; set; }         // 0-100
+        public int?     Steps              { get; set; }         // cumulative for the device's session
+
+        // MPU6050 motion. Nullable because readings that predate this, and any producer
+        // without an IMU, legitimately have none.
+        public double?  AccelX             { get; set; }         // m/s^2
+        public double?  AccelY             { get; set; }
+        public double?  AccelZ             { get; set; }
+        public double?  GyroX              { get; set; }         // deg/s
+        public double?  GyroY              { get; set; }
+        public double?  GyroZ              { get; set; }
 
         public Device?  Device             { get; set; }
         public AppUser? Athlete            { get; set; }

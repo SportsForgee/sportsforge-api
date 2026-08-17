@@ -17,6 +17,7 @@ namespace Api.Services
         Task<List<DeviceDto>> GetDevicesForAthleteAsync(string athleteId);
 
         Task<InsoleReadingDto?>   GetLatestInsoleReadingAsync(string athleteId);
+        Task<InsoleTrendDto>      GetInsoleTrendAsync(string athleteId, int days);
         Task<WearableReadingDto?> GetLatestWearableReadingAsync(string athleteId);
 
         Task<InsoleSummaryDto>   GetInsoleSummaryAsync(string athleteId, TimeSpan window);
