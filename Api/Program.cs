@@ -96,6 +96,18 @@ builder.Services.AddHttpClient<IKhoiClient, KhoiClient>(client =>
         client.DefaultRequestHeaders.Authorization = new("Bearer", apiKey);
 });
 
+// ── FORGE INSOLE (partner API, consumed like any external client — see backend/ForgeInsole) ──
+builder.Services.AddHostedService<ForgeInsoleSyncService>();
+builder.Services.AddHttpClient<IForgeInsoleClient, ForgeInsoleClient>(client =>
+{
+    var baseUrl = builder.Configuration["ForgeInsole:BaseUrl"];
+    if (!string.IsNullOrWhiteSpace(baseUrl)) client.BaseAddress = new Uri(baseUrl);
+
+    var apiKey = builder.Configuration["ForgeInsole:ApiKey"];
+    if (!string.IsNullOrWhiteSpace(apiKey))
+        client.DefaultRequestHeaders.Add("X-Api-Key", apiKey);
+});
+
 // ── VIDEO ANALYSIS (OpenCV + MediaPipe via ai-service) ───────────────────────
 builder.Services.AddSingleton<IVideoStorageService, LocalVideoStorageService>();
 builder.Services.AddScoped<IVideoAnalysisService, VideoAnalysisService>();

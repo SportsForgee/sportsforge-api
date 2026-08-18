@@ -62,6 +62,16 @@ namespace Api.Controllers
             return Ok(summary);
         }
 
+        // GET /api/insole/trend/me?days=7 — daily aggregates + biomechanics for the charts
+        [HttpGet("trend/me")]
+        public async Task<IActionResult> GetMyTrend([FromQuery] int days)
+            => Ok(await _telemetry.GetInsoleTrendAsync(GetUserId(), days <= 0 ? 7 : days));
+
+        // GET /api/insole/trend/{athleteId}?days=7 — coach/doctor view
+        [HttpGet("trend/{athleteId}")]
+        public async Task<IActionResult> GetTrend(string athleteId, [FromQuery] int days)
+            => Ok(await _telemetry.GetInsoleTrendAsync(athleteId, days <= 0 ? 7 : days));
+
         private string GetUserId() =>
             User.FindFirst(ClaimTypes.NameIdentifier)?.Value
             ?? User.FindFirst("sub")?.Value
