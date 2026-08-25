@@ -40,6 +40,11 @@ namespace Api.Hubs
         {
             var senderId   = GetUserId();
             var senderName = GetSenderName();
+            var allowed = await CanMessageDirectly(senderId, receiverId);
+            if (!allowed)
+            {
+                throw new HubException("Direct messaging is restricted to athletes in your organisation.");
+            }
 
             var msg = new Message
             {
@@ -121,6 +126,29 @@ namespace Api.Hubs
             var given  = Context.User?.FindFirst(ClaimTypes.GivenName)?.Value  ?? "";
             var family = Context.User?.FindFirst(ClaimTypes.Surname)?.Value    ?? "";
             return $"{given} {family}".Trim();
+        }
+
+        private async Task<bool> CanMessageDirectly(string senderId, string receiverId)
+        {
+            var sender = await _db.Users.FindAsync(senderId);
+            var receiver = await _db.Users.FindAsync(receiverId);
+            if (sender == null || receiver == null) return false;
+
+            if (string.Equals(sender.SfRole, "coach", StringComparison.OrdinalIgnoreCase))
+            {
+                return string.Equals(receiver.SfRole, "athlete", StringComparison.OrdinalIgnoreCase)
+                       && !string.IsNullOrWhiteSpace(sender.Organisation)
+                       && string.Equals(sender.Organisation, receiver.Organisation, StringComparison.OrdinalIgnoreCase);
+            }
+
+            if (string.Equals(receiver.SfRole, "coach", StringComparison.OrdinalIgnoreCase))
+            {
+                return string.Equals(sender.SfRole, "athlete", StringComparison.OrdinalIgnoreCase)
+                       && !string.IsNullOrWhiteSpace(receiver.Organisation)
+                       && string.Equals(sender.Organisation, receiver.Organisation, StringComparison.OrdinalIgnoreCase);
+            }
+
+            return true;
         }
 
         private static MessageDto ToDto(Message m) => new()
