@@ -12,6 +12,11 @@ namespace Api.Services
         Task<VideoUpload?> GetUploadAsync(string videoId);
         Task<VideoAnalysisResult?> GetResultAsync(string videoId);
 
+        // This clip's metrics vs the athlete's own personal best across their other
+        // Complete clips — never a fabricated "position benchmark". Returns null when
+        // the video itself has no result yet.
+        Task<VideoComparisonDto?> GetComparisonAsync(string videoId);
+
         // Marks the upload Cancelled immediately. The AI pipeline has no hard-kill hook,
         // so any already-running analysis keeps computing in the background, but
         // HandleCallbackAsync discards its result instead of overwriting the Cancelled state.
