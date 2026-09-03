@@ -41,6 +41,7 @@ namespace Api.Controllers
                 JerseyNumber = user.JerseyNumber,
                 Team         = user.Team,
                 Organisation = user.Organisation,
+                IsVisibleToScouts = user.IsVisibleToScouts,
             });
         }
 
@@ -61,6 +62,7 @@ namespace Api.Controllers
             user.Nationality  = req.Nationality ?? user.Nationality;
             user.JerseyNumber = req.JerseyNumber ?? user.JerseyNumber;
             user.Team         = req.Team ?? user.Team;
+            user.IsVisibleToScouts = req.IsVisibleToScouts ?? user.IsVisibleToScouts;
 
             var result = await _users.UpdateAsync(user);
             if (!result.Succeeded)
@@ -78,6 +80,7 @@ namespace Api.Controllers
                 JerseyNumber = user.JerseyNumber,
                 Team         = user.Team,
                 Organisation = user.Organisation,
+                IsVisibleToScouts = user.IsVisibleToScouts,
             });
         }
     }
