@@ -17,5 +17,8 @@ namespace Api.Models
         public string? Nationality { get; set; }
         public int? JerseyNumber { get; set; }
         public string? Team { get; set; }            // e.g., "Lions FC"
+
+        // Athlete-controlled opt-in: exposes a limited, non-sensitive profile to scouts.
+        public bool IsVisibleToScouts { get; set; } = false;
     }
 }
