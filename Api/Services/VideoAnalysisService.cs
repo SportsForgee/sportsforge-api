@@ -218,5 +218,51 @@ namespace Api.Services
                 .Where(r => r.VideoUploadId == videoId)
                 .OrderByDescending(r => r.CreatedAt)
                 .FirstOrDefaultAsync();
+
+        public async Task<VideoComparisonDto?> GetComparisonAsync(string videoId)
+        {
+            var current = await GetResultAsync(videoId);
+            if (current == null) return null;
+
+            var upload = await _db.VideoUploads.FindAsync(videoId);
+            if (upload == null) return null;
+
+            // The athlete's other Complete clips — denormalized columns on
+            // VideoAnalysisResult already carry the numbers we need, so no ResultJson
+            // parsing here.
+            var history = await (
+                from r in _db.VideoAnalysisResults
+                join u in _db.VideoUploads on r.VideoUploadId equals u.Id
+                where u.AthleteId == upload.AthleteId && r.VideoUploadId != videoId
+                select r
+            ).ToListAsync();
+
+            return new VideoComparisonDto
+            {
+                ClipsComparedCount = history.Count,
+                GaitBalance = BuildMetricComparison(current.GaitBalanceScore, history.Select(h => h.GaitBalanceScore)),
+                Symmetry    = BuildMetricComparison(current.SymmetryScore, history.Select(h => h.SymmetryScore)),
+                // TopSpeedKmh is already null on both current and history rows for
+                // uncalibrated clips (see HandleCallbackAsync) — never fabricate a speed.
+                TopSpeedKmh = BuildMetricComparison(current.TopSpeedKmh, history.Select(h => h.TopSpeedKmh)),
+            };
+        }
+
+        private static MetricComparisonDto? BuildMetricComparison(double? current, IEnumerable<double?> historyValues)
+        {
+            if (current == null) return null;
+
+            var validHistory = historyValues.Where(v => v.HasValue).Select(v => v!.Value).ToList();
+            if (validHistory.Count == 0) return null; // no history to compare against yet — never fabricate one
+
+            var best = validHistory.Max();
+            return new MetricComparisonDto
+            {
+                Current           = current.Value,
+                PersonalBest      = best,
+                Delta             = Math.Round(current.Value - best, 1),
+                IsNewPersonalBest = current.Value > best,
+            };
+        }
     }
 }

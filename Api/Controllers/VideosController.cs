@@ -134,6 +134,20 @@ namespace Api.Controllers
             return Ok(payload);
         }
 
+        // GET /api/videos/{id}/compare — this clip vs the athlete's own personal best
+        [Authorize]
+        [HttpGet("{id}/compare")]
+        public async Task<IActionResult> GetComparison(string id)
+        {
+            var upload = await _videos.GetUploadAsync(id);
+            if (upload == null) return NotFound();
+            if (!await CanAccessAsync(upload)) return Forbid();
+
+            var comparison = await _videos.GetComparisonAsync(id);
+            if (comparison == null) return NotFound(new { error = "Not analyzed yet.", status = upload.Status });
+            return Ok(comparison);
+        }
+
         // POST /api/videos/{id}/result?key=... — internal callback from ai-service.
         // API-key protected (shared secret), not JWT — the caller is a service, not a user.
         [AllowAnonymous]
