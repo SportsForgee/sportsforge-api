@@ -8,5 +8,6 @@ namespace Api.Models.Dtos
         public string? Nationality { get; set; }
         public int? JerseyNumber { get; set; }
         public string? Team { get; set; }
+        public bool? IsVisibleToScouts { get; set; }
     }
 }

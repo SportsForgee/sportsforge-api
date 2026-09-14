@@ -33,6 +33,7 @@ namespace Api.Models.Dtos
         public PoseMetricsDto?  PoseMetrics  { get; set; }
         public SpeedMetricsDto? SpeedMetrics { get; set; }
         public GaitBalanceDto?  GaitBalance  { get; set; }
+        public BallMetricsDto?  BallMetrics  { get; set; }
         public List<VideoAnomalyDto> Anomalies { get; set; } = new();
         public List<VideoKeyframeDto> Keyframes { get; set; } = new();
         public List<VideoDrillRecommendationDto> DrillRecommendations { get; set; } = new();
@@ -62,6 +63,39 @@ namespace Api.Models.Dtos
         public double PersonalBest      { get; set; }
         public double Delta             { get; set; } // Current - PersonalBest
         public bool   IsNewPersonalBest { get; set; }
+    }
+
+    // ── Phase 5: clip-vs-clip comparison — any two of the athlete's own analyzed
+    // clips, picked explicitly (e.g. "before" vs "after" technique work), as opposed
+    // to the always-vs-personal-best comparison above. Metrics are only populated
+    // when BOTH clips have a real (non-null, calibrated where relevant) value — never
+    // a fabricated number on one side. ──────────────────────────────────────────────
+    public class ClipPairComparisonDto
+    {
+        public ClipSummaryDto ClipA { get; set; } = new();
+        public ClipSummaryDto ClipB { get; set; } = new();
+        public ClipPairMetricDto? TopSpeedKmh      { get; set; }
+        public ClipPairMetricDto? GaitBalance      { get; set; }
+        public ClipPairMetricDto? Symmetry         { get; set; }
+        public ClipPairMetricDto? PostureStability { get; set; }
+        public ClipPairMetricDto? TopShotSpeedKmh  { get; set; }
+        public int AnomalyCountA { get; set; }
+        public int AnomalyCountB { get; set; }
+    }
+
+    public class ClipSummaryDto
+    {
+        public string   Id        { get; set; } = "";
+        public string   FileName  { get; set; } = "";
+        public DateTime CreatedAt { get; set; }
+        public string   VideoUrl  { get; set; } = "";
+    }
+
+    public class ClipPairMetricDto
+    {
+        public double ValueA { get; set; }
+        public double ValueB { get; set; }
+        public double Delta  { get; set; } // ValueB - ValueA
     }
 
     public class PoseMetricsDto
@@ -104,6 +138,40 @@ namespace Api.Models.Dtos
     public class GaitBalanceDto
     {
         public double Score { get; set; }
+    }
+
+    // ── Phase 3: football/ball detection + trajectory tracking (YOLOv8) ─────────
+    public class BallTrajectoryPointDto
+    {
+        public double TimestampSeconds { get; set; }
+        public double XNorm            { get; set; } // ball center, normalized 0-1 across frame width
+        public double YNorm            { get; set; } // ball center, normalized 0-1 across frame height
+        public double Confidence        { get; set; } // YOLO detection confidence for this frame, 0-1
+    }
+
+    public class BallMetricsDto
+    {
+        public bool    Detected               { get; set; }
+        public int?     FramesSampled           { get; set; }
+        public int?     FramesWithBallDetected  { get; set; }
+        public double?  DetectionConfidence     { get; set; }
+        public List<BallTrajectoryPointDto> Trajectory { get; set; } = new();
+        public double?  TopSpeedKmh             { get; set; }
+        public double?  AvgSpeedKmh             { get; set; }
+        // Phase 4: discrete shot/strike events found in the ball's trajectory.
+        public List<ShotSpeedEventDto> Shots    { get; set; } = new();
+        public int?     ShotCount               { get; set; }
+        public double?  TopShotSpeedKmh         { get; set; }
+        public CalibrationDto? Calibration      { get; set; }
+    }
+
+    // ── Phase 4: shot/ball-speed estimation — frame-to-frame ball speed spikes far
+    // above the clip's own typical ball movement (kicks/strikes), built on the Phase 3
+    // trajectory above. ────────────────────────────────────────────────────────────
+    public class ShotSpeedEventDto
+    {
+        public double  TimestampSeconds { get; set; }
+        public double? SpeedKmh         { get; set; } // null unless the clip is calibrated — same rule as everywhere else
     }
 
     public class VideoAnomalyDto

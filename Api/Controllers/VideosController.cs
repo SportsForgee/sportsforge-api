@@ -148,6 +148,26 @@ namespace Api.Controllers
             return Ok(comparison);
         }
 
+        // GET /api/videos/compare-clips?a={id}&b={id} — two specific clips picked by the
+        // caller (e.g. "before" vs "after" technique work), side by side. Distinct from
+        // {id}/compare above, which always compares against the athlete's personal best.
+        [Authorize]
+        [HttpGet("compare-clips")]
+        public async Task<IActionResult> GetClipPairComparison([FromQuery] string a, [FromQuery] string b)
+        {
+            if (string.IsNullOrEmpty(a) || string.IsNullOrEmpty(b) || a == b)
+                return BadRequest(new { error = "Provide two different video ids (query params 'a' and 'b')." });
+
+            var uploadA = await _videos.GetUploadAsync(a);
+            var uploadB = await _videos.GetUploadAsync(b);
+            if (uploadA == null || uploadB == null) return NotFound();
+            if (!await CanAccessAsync(uploadA) || !await CanAccessAsync(uploadB)) return Forbid();
+
+            var comparison = await _videos.GetClipPairComparisonAsync(a, b);
+            if (comparison == null) return NotFound(new { error = "Both clips must be fully analyzed." });
+            return Ok(comparison);
+        }
+
         // POST /api/videos/{id}/result?key=... — internal callback from ai-service.
         // API-key protected (shared secret), not JWT — the caller is a service, not a user.
         [AllowAnonymous]

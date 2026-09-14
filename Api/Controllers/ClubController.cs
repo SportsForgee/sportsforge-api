@@ -21,6 +21,18 @@ namespace Api.Controllers
             return Ok(_clubDataService.GetDashboard());
         }
 
+        [HttpGet("squad")]
+        public ActionResult<IReadOnlyList<ClubSquadPlayer>> GetSquad()
+        {
+            return Ok(_clubDataService.GetSquad());
+        }
+
+        [HttpGet("recruitment-shortlist")]
+        public ActionResult<IReadOnlyList<RecruitmentProspect>> GetRecruitmentShortlist()
+        {
+            return Ok(_clubDataService.GetRecruitmentShortlist());
+        }
+
         [HttpGet("medical-watchlist")]
         public ActionResult<IReadOnlyList<MedicalWatchlistItem>> GetMedicalWatchlist()
         {

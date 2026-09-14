@@ -12,5 +12,6 @@ namespace Api.Models.Dtos
         public int? JerseyNumber { get; set; }
         public string? Team { get; set; }
         public string? Organisation { get; set; }
+        public bool IsVisibleToScouts { get; set; }
     }
 }

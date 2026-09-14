@@ -33,9 +33,22 @@ namespace Api.Data
         public DbSet<VideoUpload>         VideoUploads         { get; set; }
         public DbSet<VideoAnalysisResult> VideoAnalysisResults { get; set; }
 
+        // Admin portal
+        public DbSet<AuditLog>        AuditLogs        { get; set; }
+        public DbSet<PlatformSetting> PlatformSettings { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            builder.Entity<AuditLog>(e =>
+            {
+                e.HasIndex(a => a.CreatedAt);
+                e.HasIndex(a => a.Category);
+                e.HasIndex(a => a.UserId);
+            });
+
+            builder.Entity<PlatformSetting>(e => e.HasKey(p => p.Key));
 
             builder.Entity<Message>(e =>
             {

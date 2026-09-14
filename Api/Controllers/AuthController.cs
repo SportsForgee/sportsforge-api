@@ -12,11 +12,13 @@ namespace Api.Controllers
     {
         private readonly UserManager<AppUser> _users;
         private readonly IJwtService          _jwt;
+        private readonly IAuditService        _audit;
 
-        public AuthController(UserManager<AppUser> users, IJwtService jwt)
+        public AuthController(UserManager<AppUser> users, IJwtService jwt, IAuditService audit)
         {
             _users = users;
             _jwt   = jwt;
+            _audit = audit;
         }
 
         [HttpPost("register")]
@@ -52,6 +54,8 @@ namespace Api.Controllers
 
             var token = _jwt.GenerateToken(user);
 
+            await _audit.LogAsync("auth", "register", $"New {user.SfRole} account created.", user);
+
             return Ok(new AuthResponse
             {
                 Token     = token,
@@ -68,12 +72,21 @@ namespace Api.Controllers
             var user = await _users.FindByEmailAsync(req.Email);
 
             if (user == null || !await _users.CheckPasswordAsync(user, req.Password))
+            {
+                await _audit.LogAsync("auth", "login.failed", "Invalid email or password.",
+                                      email: req.Email, success: false);
                 return Unauthorized(new { error = "Invalid email or password." });
+            }
 
             if (user.LockoutEnd.HasValue && user.LockoutEnd > DateTimeOffset.UtcNow)
+            {
+                await _audit.LogAsync("auth", "login.blocked", "Account is suspended.", user, success: false);
                 return Unauthorized(new { error = "Account is temporarily locked. Please try again later." });
+            }
 
             var token = _jwt.GenerateToken(user);
+
+            await _audit.LogAsync("auth", "login.success", null, user);
 
             return Ok(new AuthResponse
             {

@@ -82,6 +82,8 @@ builder.Services.AddSingleton<IClubDataService, InMemoryClubDataService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<ICoachDashboardService, CoachDashboardService>();
 builder.Services.AddScoped<IDoctorDashboardService, DoctorDashboardService>();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<IAuditService, AuditService>();
 
 // ── HARDWARE TELEMETRY (Forge Insole + Khoi wearable) ────────────────────────
 builder.Services.AddScoped<IHardwareTelemetryService, HardwareTelemetryService>();
