@@ -1,0 +1,24 @@
+# .NET
+bin/
+obj/
+*.dll
+*.exe
+*.pdb
+*.cache
+.vs/
+
+# Runtime data (uploaded videos, AI-generated proof assets) — not source
+storage/
+
+# Environment files
+.env
+.env.local
+
+# Logs
+*.log
+
+# OS / Editor
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
