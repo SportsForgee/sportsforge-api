@@ -17,6 +17,11 @@ namespace Api.Services
         // the video itself has no result yet.
         Task<VideoComparisonDto?> GetComparisonAsync(string videoId);
 
+        // Two specific clips, explicitly picked, side by side (Phase 5) — distinct from
+        // GetComparisonAsync's always-vs-personal-best view. Returns null if either clip
+        // hasn't been analyzed yet.
+        Task<ClipPairComparisonDto?> GetClipPairComparisonAsync(string videoIdA, string videoIdB);
+
         // Marks the upload Cancelled immediately. The AI pipeline has no hard-kill hook,
         // so any already-running analysis keeps computing in the background, but
         // HandleCallbackAsync discards its result instead of overwriting the Cancelled state.

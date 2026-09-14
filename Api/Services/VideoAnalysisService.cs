@@ -264,5 +264,52 @@ namespace Api.Services
                 IsNewPersonalBest = current.Value > best,
             };
         }
+
+        public async Task<ClipPairComparisonDto?> GetClipPairComparisonAsync(string videoIdA, string videoIdB)
+        {
+            var uploadA = await _db.VideoUploads.FindAsync(videoIdA);
+            var uploadB = await _db.VideoUploads.FindAsync(videoIdB);
+            if (uploadA == null || uploadB == null) return null;
+
+            var resultA = await GetResultAsync(videoIdA);
+            var resultB = await GetResultAsync(videoIdB);
+            if (resultA == null || resultB == null) return null; // both clips must be analyzed
+
+            var payloadA = JsonSerializer.Deserialize<VideoAnalysisCallbackRequest>(resultA.ResultJson);
+            var payloadB = JsonSerializer.Deserialize<VideoAnalysisCallbackRequest>(resultB.ResultJson);
+            if (payloadA == null || payloadB == null) return null;
+
+            // TopSpeedKmh (and shot speed) are only real when calibrated — same rule as
+            // everywhere else in this feature, never fabricate a number for uncalibrated clips.
+            var speedA = payloadA.SpeedMetrics?.Calibration?.Method != "uncalibrated" ? payloadA.SpeedMetrics?.TopSpeedKmh : null;
+            var speedB = payloadB.SpeedMetrics?.Calibration?.Method != "uncalibrated" ? payloadB.SpeedMetrics?.TopSpeedKmh : null;
+
+            return new ClipPairComparisonDto
+            {
+                ClipA = new ClipSummaryDto
+                {
+                    Id = uploadA.Id, FileName = uploadA.FileName, CreatedAt = uploadA.CreatedAt,
+                    VideoUrl = _storage.GetPublicUrl(uploadA.AthleteId, uploadA.StoragePath),
+                },
+                ClipB = new ClipSummaryDto
+                {
+                    Id = uploadB.Id, FileName = uploadB.FileName, CreatedAt = uploadB.CreatedAt,
+                    VideoUrl = _storage.GetPublicUrl(uploadB.AthleteId, uploadB.StoragePath),
+                },
+                TopSpeedKmh      = BuildPairMetric(speedA, speedB),
+                GaitBalance      = BuildPairMetric(payloadA.GaitBalance?.Score, payloadB.GaitBalance?.Score),
+                Symmetry         = BuildPairMetric(payloadA.PoseMetrics?.SymmetryScore, payloadB.PoseMetrics?.SymmetryScore),
+                PostureStability = BuildPairMetric(payloadA.PoseMetrics?.PostureStabilityScore, payloadB.PoseMetrics?.PostureStabilityScore),
+                TopShotSpeedKmh  = BuildPairMetric(payloadA.BallMetrics?.TopShotSpeedKmh, payloadB.BallMetrics?.TopShotSpeedKmh),
+                AnomalyCountA    = payloadA.Anomalies.Count,
+                AnomalyCountB    = payloadB.Anomalies.Count,
+            };
+        }
+
+        private static ClipPairMetricDto? BuildPairMetric(double? a, double? b)
+        {
+            if (a == null || b == null) return null; // only compare when both clips actually have this metric
+            return new ClipPairMetricDto { ValueA = a.Value, ValueB = b.Value, Delta = Math.Round(b.Value - a.Value, 1) };
+        }
     }
 }
