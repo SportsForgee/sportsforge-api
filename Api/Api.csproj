@@ -28,7 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\khoiIntegration\khoiIntegration.csproj" />
+    <ProjectReference Include="..\KhoiIntegration\khoiIntegration.csproj" />
   </ItemGroup>
 
 </Project>
